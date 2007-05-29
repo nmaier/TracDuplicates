@@ -72,6 +72,6 @@ class DuplicatesModule(Component):
         Ticket(self.env, dupeid, db=db)
         ticket.duplicate_id = dupeid
         ticket._dhook_save_changes = ticket.save_changes
-        ticket.save_changes = self.save_changes
+        ticket.save_changes = save_changes
       except (ValueError, TypeError, TracError):
         yield None, "Invalid Duplicate Ticket Id"
