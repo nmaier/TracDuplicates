@@ -3,9 +3,30 @@ from trac.web.api import IRequestFilter
 from trac.web.chrome import ITemplateProvider, add_stylesheet, add_script
 from trac.ticket.api import ITicketManipulator
 from trac.ticket.model import Ticket
-from trac.util import get_reporter_id
 
 from pkg_resources import resource_filename
+
+class TicketProxy:
+  def __init__(self, dupe_id, ticket):
+    self._dupe_id = dupe_id
+    self._ticket = ticket
+    ticket._proxy_old_save = ticket.save_changes
+    ticket.save_changes = self.save_changes
+  
+  def save_changes(self, author, comment, when=0, db=None, cnum=''):
+    dupeticket = Ticket(self._ticket.env, self._dupe_id, db=db)
+    dupeticket.save_changes(
+      author,
+      "*** Ticket #%d marked duplicate of this one ***" % self._ticket.id,
+      when=when,
+      db=db
+      )
+    if not comment or not len(comment.strip()):
+      comment = ""
+    else:
+      comment += "\n\n"
+    comment += "*** Marked duplicate of #%d ***" % self._dupe_id
+    return self._ticket._proxy_old_save(author, comment, when=when, db=db, cnum=cnum)    
 
 class DuplicatesModule(Component):
   implements(IRequestFilter, ITemplateProvider, ITicketManipulator)
@@ -48,21 +69,6 @@ class DuplicatesModule(Component):
   
   def validate_ticket(self, req, ticket):
     """ Somewhat hacky; what if we later fail... Anyway :p """
-
-    def save_changes(self, author, comment, when=0, db=None, cnum=''):
-      dupeticket = Ticket(self.env, self.duplicate_id, db=db)
-      dupeticket.save_changes(
-        get_reporter_id(req, 'author'),
-        "*** Ticket #%d marked duplicate of this one ***" % self.id,
-        when=when,
-        db=db
-        )
-      if not comment or not len(comment.strip()):
-        comment = ""
-      else:
-        comment += "\n\n"
-      comment += "*** Marked duplicate of #%d ***" % self.duplicate_id      
-      return self._dhook_save_changes(author, comment, when=when, db=db, cnum=cnum)
   
     if req.args.get('is_duped'):
       db = self.env.get_db_cnx()
@@ -70,8 +76,6 @@ class DuplicatesModule(Component):
       try:
         dupeid = int(req.args.get('duplicate_id'))
         Ticket(self.env, dupeid, db=db)
-        ticket.duplicate_id = dupeid
-        ticket._dhook_save_changes = ticket.save_changes
-        ticket.save_changes = save_changes
+        TicketProxy(dupeid, ticket)
       except (ValueError, TypeError, TracError):
         yield None, "Invalid Duplicate Ticket Id"
