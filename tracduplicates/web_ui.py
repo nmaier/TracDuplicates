@@ -20,7 +20,7 @@ class DuplicatesModule(Component):
   def get_htdocs_dirs():
     return [('duplicates', resource_filename(__name__, 'htdocs'))]
   
-  def get_template_dirs():
+  def get_templates_dirs():
     return [('duplicates', resource_filename(__name__, 'templates'))]
   
   # ITicketManipulator
