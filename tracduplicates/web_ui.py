@@ -32,7 +32,7 @@ class DuplicatesModule(Component):
         req.hdf['ticket.actions.duplicate'] = 1
         if req.args.get('duplicate_id'):
           req.hdf['ticket.duplicate_id'] = req.args.get('duplicate_id')
-        req.hdf.pop('ticket.fields.resolution.options.duplicate')
+        req.hdf['ticket.fields.resolution.options.duplicate'] = '<<NONE>>'
         
     return template, content_type
     
