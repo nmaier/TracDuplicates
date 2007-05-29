@@ -19,7 +19,7 @@ class DuplicatesModule(Component):
       
   def post_process_request(self, req, template, content_type):
     if template == 'ticket.cs':
-      template = 'duplicates/ticket.cs'
+      template = 'duplicates_ticket.cs'
       add_script(req, 'duplicates/duplicates.js')
     return template, content_type
     
@@ -28,7 +28,7 @@ class DuplicatesModule(Component):
     return [('duplicates', resource_filename(__name__, 'htdocs'))]
   
   def get_templates_dirs(self):
-    return [('duplicates', resource_filename(__name__, 'templates'))]
+    return [resource_filename(__name__, 'templates')]
   
   # ITicketManipulator
   def prepare_ticket(self, req, ticket, fields, actions):
