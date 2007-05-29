@@ -46,23 +46,24 @@ class DuplicatesModule(Component):
   def prepare_ticket(self, req, ticket, fields, actions):
     return handler
   
-  def save_changes(self, author, comment, when=0, db=None, cnum=''):
-    dupeticket = Ticket(self.env, self.duplicate_id, db=db)
-    dupeticket.save_changes(
-      get_reporter_id(req, 'author'),
-      "*** Ticket #%d marked duplicate of this one ***" % self.id,
-      when=when,
-      db=db
-      )
-    if not comment or not len(comment.strip()):
-      comment = ""
-    else:
-      comment += "\n\n"
-    comment += "*** Marked duplicate of #%d ***" % self.duplicate_id      
-    return self._dhook_save_changes(author, comment, when=when, db=db, cnum=cnum)
-  
   def validate_ticket(self, req, ticket):
     """ Somewhat hacky; what if we later fail... Anyway :p """
+
+    def save_changes(self, author, comment, when=0, db=None, cnum=''):
+      dupeticket = Ticket(self.env, self.duplicate_id, db=db)
+      dupeticket.save_changes(
+        get_reporter_id(req, 'author'),
+        "*** Ticket #%d marked duplicate of this one ***" % self.id,
+        when=when,
+        db=db
+        )
+      if not comment or not len(comment.strip()):
+        comment = ""
+      else:
+        comment += "\n\n"
+      comment += "*** Marked duplicate of #%d ***" % self.duplicate_id      
+      return self._dhook_save_changes(author, comment, when=when, db=db, cnum=cnum)
+  
     if req.args.get('is_duped'):
       db = self.env.get_db_cnx()
       comment = req.args.get('comment')
