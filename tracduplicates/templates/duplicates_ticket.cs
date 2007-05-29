@@ -281,6 +281,12 @@
    call:action_radio('reopen') ?>
    <label for="reopen">reopen ticket</label><br /><?cs
   /if ?><?cs
+  if:ticket.actions.duplicate ?><?cs
+   call:action_radio('duplicate') ?>
+   <label for="duplicate">dupe to #</label>
+   <input type="text" id="duplicate_id" name="duplicate_id" size="40" value="<?cs
+      var:ticket.duplicate_id ?>" /><br/><?cs
+  /if ?><?cs
   if:ticket.actions.resolve ?><?cs
    call:action_radio('resolve') ?>
    <label for="resolve">resolve</label><?cs
@@ -310,6 +316,7 @@
      var updateActionFields = function() {
        <?cs if:ticket.actions.resolve ?> enableControl('resolve_resolution', resolve.checked);<?cs /if ?>
        <?cs if:ticket.actions.reassign ?> enableControl('reassign_owner', reassign.checked);<?cs /if ?>
+       <?cs if:ticket.actions.duplicate ?> enableControl('duplicate_id', duplicate.checked);<?cs /if ?>
      };
      addEvent(window, 'load', updateActionFields);<?cs
      each:action = ticket.actions ?>
