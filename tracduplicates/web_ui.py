@@ -10,10 +10,17 @@ class DuplicatesModule(Component):
   
   # IRequestFilter methods
   def pre_process_request(self, req, handler):
-      return handler
+    if req.path_info.startswith('/ticket/') and req.method == 'POST' and req.args.has_key('preview'):
+      if req.args.get('accept') == 'dupe':
+        req.args['accept'] = 'resolve'
+        req.args['resolve_resolution'] = 'duplicate'
+
+
+    return handler
       
   def post_process_request(self, req, template, content_type):
-    raise TracError(Error)
+    if template == 'ticket.cs':
+      template = 'duplicates/ticket.cs'
     return template, content_type
     
   # ITemplateProvider
@@ -28,4 +35,5 @@ class DuplicatesModule(Component):
     return handler
   
   def validate_ticket(self, req, ticket):
-    pass
+    if req.args.get('accept') == 'dupe':
+      pass
