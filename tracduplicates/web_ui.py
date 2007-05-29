@@ -6,7 +6,7 @@ from trac.ticket.api import ITicketManipulator
 from pkg_resources import resource_filename
 
 class DuplicatesModule(Component):
-  implements(IRequestFilter, ITemplateProvider, ITickerManipulator)
+  implements(IRequestFilter, ITemplateProvider, ITicketManipulator)
   
   # IRequestFilter methods
   def pre_process_request(self, req, handler):
