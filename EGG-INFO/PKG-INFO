@@ -1,0 +1,12 @@
+Metadata-Version: 1.0
+Name: TracDuplicates
+Version: 0.1
+Summary: Provides support for duplicates ticket references
+Home-page: http://tn123.ath.cx/TracDuplicates
+Author: Nils Maier
+Author-email: testnutzer123@gmail.com
+License: BSD
+Description: UNKNOWN
+Keywords: trac plugin ticket dependencies duplicates
+Platform: UNKNOWN
+Classifier: Framework :: Trac
