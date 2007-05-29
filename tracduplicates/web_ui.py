@@ -17,10 +17,10 @@ class DuplicatesModule(Component):
     return template, content_type
     
   # ITemplateProvider
-  def get_htdocs_dirs():
+  def get_htdocs_dirs(self):
     return [('duplicates', resource_filename(__name__, 'htdocs'))]
   
-  def get_templates_dirs():
+  def get_templates_dirs(self):
     return [('duplicates', resource_filename(__name__, 'templates'))]
   
   # ITicketManipulator
