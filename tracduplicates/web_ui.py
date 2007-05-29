@@ -56,7 +56,7 @@ class DuplicatesModule(Component):
         dupeticket = Ticket(self.env, dupeid, db=db)
         dupeticket.save_changes(
           get_reporter_id(req, 'author'),
-          "*** Ticket #%d marked duplicate of this one ***" % dupeid,
+          "*** Ticket #%d marked duplicate of this one ***" % ticket.id,
           when=now,
           db=db
           )
