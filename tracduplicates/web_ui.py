@@ -1,5 +1,3 @@
-from time import time
-
 from trac.core import *
 from trac.web.api import IRequestFilter
 from trac.web.chrome import ITemplateProvider, add_stylesheet, add_script
@@ -14,7 +12,10 @@ class DuplicatesModule(Component):
   
   # IRequestFilter methods
   def pre_process_request(self, req, handler):
-    if req.path_info.startswith('/ticket/') and req.method == 'POST' and not req.args.has_key('preview'):
+    if not req.path_info.startswith('/ticket/') or not req.method == 'POST':
+      return handler
+
+    if not req.args.has_key('preview'):
       if req.args.get('action') == 'duplicate':
         req.args['action'] = 'resolve'
         req.args['resolve_resolution'] = 'duplicate'
@@ -45,27 +46,31 @@ class DuplicatesModule(Component):
   def prepare_ticket(self, req, ticket, fields, actions):
     return handler
   
+  def save_changes(self, author, comment, when=0, db=None, cnum=''):
+    dupeticket = Ticket(self.env, self.duplicate_id, db=db)
+    dupeticket.save_changes(
+      get_reporter_id(req, 'author'),
+      "*** Ticket #%d marked duplicate of this one ***" % self.id,
+      when=when,
+      db=db
+      )
+    if not comment or not len(comment.strip()):
+      comment = ""
+    else:
+      comment += "\n\n"
+    comment += "*** Marked duplicate of #%d ***" % self.duplicate_id      
+    return self._dhook_save_changes(author, comment, when=when, db=db, cnum=cnum)
+  
   def validate_ticket(self, req, ticket):
     """ Somewhat hacky; what if we later fail... Anyway :p """
     if req.args.get('is_duped'):
-      now = int(time())
       db = self.env.get_db_cnx()
       comment = req.args.get('comment')
       try:
         dupeid = int(req.args.get('duplicate_id'))
-        dupeticket = Ticket(self.env, dupeid, db=db)
-        dupeticket.save_changes(
-          get_reporter_id(req, 'author'),
-          "*** Ticket #%d marked duplicate of this one ***" % ticket.id,
-          when=now,
-          db=db
-          )
-        if not comment or not len(comment.strip()):
-          comment = ""
-        else:
-          comment += "\n\n"
-        comment += "*** Marked duplicate of #%d ***" % dupeid
-        req.args['comment'] = comment
+        Ticket(self.env, dupeid, db=db)
+        ticket.duplicate_id = dupeid
+        ticket._dhook_save_changes = ticket.save_changes
+        ticket.save_changes = self.save_changes
       except (ValueError, TypeError, TracError):
         yield None, "Invalid Duplicate Ticket Id"
-      
