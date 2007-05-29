@@ -15,12 +15,12 @@ class DuplicatesModule(Component):
         req.args['accept'] = 'resolve'
         req.args['resolve_resolution'] = 'duplicate'
 
-
     return handler
       
   def post_process_request(self, req, template, content_type):
     if template == 'ticket.cs':
       template = 'duplicates/ticket.cs'
+      add_script(req, 'duplicates/duplicates.js')
     return template, content_type
     
   # ITemplateProvider
