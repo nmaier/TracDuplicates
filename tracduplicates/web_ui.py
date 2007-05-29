@@ -32,13 +32,11 @@ class DuplicatesModule(Component):
         req.hdf['ticket.actions.duplicate'] = 1
         if req.args.get('duplicate_id'):
           req.hdf['ticket.duplicate_id'] = req.args.get('duplicate_id')
-        req.hdf['ticket.fields.resolution.options.duplicate'] = '<<NONE>>'
-        
     return template, content_type
     
   # ITemplateProvider
   def get_htdocs_dirs(self):
-    return [('duplicates', resource_filename(__name__, 'htdocs'))]
+    return []
   
   def get_templates_dirs(self):
     return [resource_filename(__name__, 'templates')]
