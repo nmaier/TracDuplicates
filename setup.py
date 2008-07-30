@@ -5,7 +5,7 @@ setup(
     name = 'TracDuplicates',
     version = '0.1',
     packages = ['tracduplicates'],
-    package_data = { 'tracduplicates': ['htdocs/*', 'templates/*' ] },
+    package_data = { 'tracduplicates': [ 'templates/*' ] },
 
     author = "Nils Maier",
     author_email = "testnutzer123@gmail.com",

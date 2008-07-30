@@ -49,7 +49,6 @@ class DuplicatesModule(Component):
   def post_process_request(self, req, template, content_type):
     if template == 'ticket.cs':
       template = 'duplicates_ticket.cs'
-      add_script(req, 'duplicates/duplicates.js')
       if req.hdf.get('ticket.actions.resolve'):
         req.hdf['ticket.actions.duplicate'] = 1
         if req.args.get('duplicate_id'):
