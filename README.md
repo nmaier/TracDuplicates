@@ -9,6 +9,10 @@ Requirements
 ------------
 Working Trac 0.10 (tested with 0.10.4)
 
+Installation
+------------
+easy_install http://github.com/nmaier/TracDuplicates/tarball/0.10
+
 Configuration
 -------------
 Enable tracduplicates.web_ui
