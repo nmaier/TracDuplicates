@@ -1,3 +1,2 @@
 [trac.plugins]
 tracduplicates.web_ui = tracduplicates.web_ui
-

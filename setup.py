@@ -5,8 +5,6 @@ setup(
     name = 'TracDuplicates',
     version = '0.11',
     packages = ['tracduplicates'],
-    package_data = { 'tracduplicates': [ 'templates/*' ] },
-
     author = "Nils Maier",
     author_email = "testnutzer123@gmail.com",
     description = "Provides support for duplicates ticket references",
