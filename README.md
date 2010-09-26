@@ -18,14 +18,15 @@ Configuration
 * Enable tracduplicates.web_ui
 * Add the Workflow
 
-    [ticket]
-    workflow = ConfigurableTicketWorkflow,DuplicatesWorkflow
+      [ticket]
+      workflow = ConfigurableTicketWorkflow,DuplicatesWorkflow
+
 * Add Workflow items
 
-    [ticket-workflow]
-    duplicate = * -> closed
-    duplicate.operations = set_duplicate
-    duplicate.name = Close as duplicate of
+      [ticket-workflow]
+      duplicate = * -> closed
+      duplicate.operations = set_duplicate
+      duplicate.name = Close as duplicate of
 
 Code Repo
 ---------
