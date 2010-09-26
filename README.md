@@ -11,11 +11,19 @@ Working Trac 0.10 (tested with 0.10.4)
 
 Installation
 ------------
-easy_install http://github.com/nmaier/TracDuplicates/tarball/0.10
+easy_install http://github.com/nmaier/TracDuplicates/tarball/0.11
 
 Configuration
 -------------
-Enable tracduplicates.web_ui
+* Enable tracduplicates.web_ui
+* Add the Workflow
+    [ticket]
+    workflow = ConfigurableTicketWorkflow,DuplicatesWorkflow
+* Add Workflow items
+    [ticket-workflow]
+    duplicate = * -> closed
+    duplicate.operations = set_duplicate
+    duplicate.name = Close as duplicate of
 
 Code Repo
 ---------
